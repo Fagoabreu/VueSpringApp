@@ -127,6 +127,8 @@ export default {
         },
         checkForm() {
             let errors = "";
+            let today = new Date();
+            today.setUTCHours(0, 0, 0, 0);
             if (!this.transfer.originAccount) {
                 errors += ('Conta Origem vazio.<br>');
             }
@@ -138,13 +140,15 @@ export default {
             }
             if (!this.transfer.transferDate) {
                 errors += ('Data Transferencia vazia.<br>');
-            } else if (new Date(this.transfer.transferDate) < new Date) {
+            } else if (new Date(this.transfer.transferDate) < today) {
                 errors += ('Data Transferencia menor que a data atual.<br>');
             }
 
+            console.log(`Value: ${this.transfer.transferValue} Tax: ${this.transfer.taxValue}`);
+
             if (!this.transfer.transferValue) {
                 errors += ('Valor Transferencia vazio.<br>');
-            } else if (this.transfer.transferValue < this.transfer.taxValue) {
+            } else if (Number(this.transfer.taxValue) > Number(this.transfer.transferValue)) {
                 errors += ('Valor Transferencia menor que a taxa calculada.<br>');
             }
 
@@ -170,17 +174,12 @@ export default {
             axios
                 .get(`/v1/rules?days=${days}`)
                 .then(response => {
-                    this.rules = response.data;
-                    let taxPct = 0;
-                    let rate = 0;
-                    if (this.rules.lenght > 0) {
+                    if (response.data && response.data.length > 0) {
+                        this.rules = response.data;
                         this.taxAplied = true;
+                        const rule = this.rules[0];
+                        this.transfer.taxValue = Math.max(rule.rate, this.transfer.transferValue * rule.taxPct / 100);
                     }
-                    this.rules.forEach(rule => {
-                        taxPct += rule.taxPct;
-                        rate += rule.rate;
-                    });
-                    this.transfer.taxValue = rate + this.transfer.transferValue * taxPct / 100;
                     this.isSubmitting = false;
                 })
                 .catch(error => {
