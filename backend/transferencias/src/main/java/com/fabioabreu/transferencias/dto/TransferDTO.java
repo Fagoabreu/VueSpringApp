@@ -1,6 +1,7 @@
 package com.fabioabreu.transferencias.dto;
 
 import com.fabioabreu.transferencias.entity.RuleEntity;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.NotNull;
@@ -24,6 +25,7 @@ public class TransferDTO {
     private double transferValue;
     private double taxValue;
     @NotNull
+    @JsonFormat(pattern="yyyy-MM-dd")
     private Date transferDate;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

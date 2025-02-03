@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RuleServiceImpl implements RuleService {
@@ -32,8 +33,13 @@ public class RuleServiceImpl implements RuleService {
     }
 
     @Override
-    public List<RuleDTO> allRules() {
-        List<RuleEntity> ruleEntities = ruleRepository.findAll();
+    public List<RuleDTO> allRules(Optional<Integer> days) {
+        List<RuleEntity> ruleEntities;
+        if(days.isEmpty()) {
+            ruleEntities = ruleRepository.findAll();
+        }else{
+            ruleEntities = ruleRepository.findAllByDayMinGreaterThanEqualAndDayMaxLessThanEqual(days.get(),days.get());
+        }
         return ruleConverter.toDTO(ruleEntities);
     }
 

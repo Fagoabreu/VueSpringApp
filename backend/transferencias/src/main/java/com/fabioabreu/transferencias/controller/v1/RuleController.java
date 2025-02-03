@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -26,8 +27,9 @@ public class RuleController {
     }
 
     @GetMapping
-    public ResponseEntity<List<RuleDTO>> allRules(){
-        List<RuleDTO> ruleDTOS = ruleService.allRules();
+    public ResponseEntity<List<RuleDTO>> allRules(
+            @RequestParam Optional<Integer> days){
+        List<RuleDTO> ruleDTOS = ruleService.allRules(days);
         return ResponseEntity.status(200).body(ruleDTOS);
     }
 
@@ -36,6 +38,7 @@ public class RuleController {
         RuleDTO ruleDTO = ruleService.getRuleDetail(id);
         return ResponseEntity.status(200).body(ruleDTO);
     }
+
     @PutMapping("/{id}")
     public ResponseEntity<RuleDTO> updateRule(@PathVariable Long id, RuleDTO ruleDTO){
         ruleDTO = ruleService.updateRule(id,ruleDTO);
