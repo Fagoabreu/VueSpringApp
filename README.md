@@ -30,6 +30,8 @@ DB_PASS: Database password, default: NONE
 
 FRONTEND_URL: fontend url for Cors config, default http://localhost:8081
 
+Inital database data file: ./backend/transferencias/src/main/resources/data.sql: 
+
 ## Front Config
 Config file location: /frontend/transferencias/.env
 VUE_APP_API_BASE_URL: backend link url, default http://localhost:8080/api
